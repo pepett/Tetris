@@ -24,7 +24,7 @@ public class Game {
     private final int cX = 3;
     private final int cY = 0;
 
-    private static boolean keyflg = true;
+    //private static boolean keyflg = true;
     private static int count = 0;
 
 
@@ -73,36 +73,55 @@ public class Game {
 
                     if(blockFlag){
                         blocks.add(new Block(cX,cY));
-                        //for(int i = 0;i < blocks.size(); i++){
-                        //    Block b = blocks.get(i);
-                        //    this.check(0,1,b);
-                        //}
                         blockFlag = false;
                     }
 
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)){
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE) && count == 0){
                         count ++;
-                        if(count == 1){
-                            if( this.check(0, 0) ){
-                            }else{
-                                if(blocks.get(blocks.size() - 1).getBlockAngle() == 3){
-                                    blocks.get(blocks.size() - 1).setBlockAngle(-3);
-                                }else{
-                                    blocks.get(blocks.size() - 1).setBlockAngle(1);
+                        Block b = blocks.get(blocks.size() - 1);
+                        int[][][][] tmpB = new int[b.getBlocks().length][b.getBlocks()[0].length][4][4];
+                            for(int i = 0;i < blocks.get(blocks.size() - 1).getBlocks().length;i ++){
+                                for(int j = 0;j < blocks.get(blocks.size() - 1).getBlocks()[0].length;j ++){
+                                    for(int y = 0;y < 4;y ++){
+                                        for(int x = 0;x < 4;x ++){
+                                            tmpB[i][j][y][x] = blocks.get(blocks.size() - 1).getBlocks()[i][j][y][x];
+                                        }
+                                    }
+                                    
                                 }
                             }
+                        if(b.getBlockAngle() < 3){
+
+                            // = new int[i][j][y][x]
+                            //tmpB.setBlockAngle(1);
+                            if(this.check(0, 0, tmpB[b.getBlockType()][b.getBlockAngle() + 1])){
+                                blocks.get(blocks.size() - 1).setBlockAngle(1);
+                            }
+                        }else{
+                            if(this.check(0, 0, tmpB[b.getBlockType()][0])) blocks.get(blocks.size() - 1).setBlockAngle(-3);
                         }
+                        //if( this.check(0, 0, b) ){
+                        //    System.out.println('a');
+                        //    blocks.get(blocks.size() - 1).setBlockAngle(1);
+                        //}else{
+                        //    System.out.println("error");
+                        //    if(blocks.get(blocks.size() - 1).getBlockAngle() == 3){
+                        //        blocks.get(blocks.size() - 1).setBlockAngle(-3);
+                        //    }else{
+                        //        blocks.get(blocks.size() - 1).setBlockAngle(1);
+                        //    }
+                        //}
                     }
 
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT) && keyflg){
-                        if( this.check(-1, 0) ){
-                            blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() - 1);
-                        }
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)){
+                        //if( this.check(-1, 0) ){
+                        //    blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() - 1);
+                        //}
                     }
 
                     for(int i = 0;i < blocks.size(); i++){
                         Block b = blocks.get(i);
-                        if(this.check(0, 1, b) && dropTime == 0){
+                        if(this.check(0, 1, b.getBlocks()[blocks.get(blocks.size() - 1).getBlockType()][blocks.get(blocks.size() - 1).getBlockAngle()]) && dropTime == 0){
                             b.update();
                             dropTime = 30;
                         }else{}
@@ -140,29 +159,35 @@ public class Game {
         }
     }
 
-    private boolean check(int x,int y){
-        Block b = blocks.get(0);//blocks.size() - 1
-        int blockAngle = b.getBlockAngle();
-        if(b.getBlockAngle() == 3){
-            b.setBlockAngle(-3);
-        }else{
-            b.setBlockAngle(1);
-        }
-        if(check(x, y, b)){
-            return b.setBlockAngle(blockAngle,false);
-        }else{
-            return true;
-        }
-    }
+    //private boolean check(int x,int y){
+    //    Block b = blocks.get(blocks.size() - 1);
+    //    int blockAngle = b.getBlockAngle();
+    //    if(b.getBlockAngle() < 3){
+    //        b.setBlockAngle(1);
+    //    }else{
+    //        b.setBlockAngle(-3);
+    //    }
+    //    return check(x, y, b);
+    //    //if(check(x, y, b)){
+    //    //    //return b.setBlockAngle(blockAngle,false);
+    //    //    return true;
+    //    //}else{
+    //    //    return false;
+    //    //}
+    //}
 
-    private boolean check(int x,int y,Block b){
-        int[][][][] block = b.getBlocks();
+    private boolean check(int x,int y,int[][] b){
+        //int[][][][] block = b.getBlocks();
         for(int ny = 0;ny < 4;ny ++){
             for(int nx = 0;nx < 4;nx ++){
-                if(block[b.getBlockType()][b.getBlockAngle()][ny][nx] == 0) continue;
+                //System.out.println(ny);
+                //System.out.println(nx);
+                //System.out.println(b.getBlockType());
+                //System.out.println(b.getBlockAngle());
+                if(b[ny][nx] == 0) continue;
 
-                int checkX = x + nx + b.getX();
-                int checkY = y + ny + b.getY();
+                int checkX = x + nx + blocks.get(blocks.size() - 1).getX();
+                int checkY = y + ny + blocks.get(blocks.size() - 1).getY();
 
                 if(
                     checkX < 0 || checkY < 0 ||
@@ -176,7 +201,7 @@ public class Game {
     }
 
     public static void setKeyFlg(){
-        keyflg = true;
+        //keyflg = true;
         count = 0;
     }
 

@@ -97,9 +97,4 @@ public class Block {
         this.blockAngle += n;
     }
 
-    public boolean setBlockAngle(int n,boolean flg){
-        this.blockAngle = n;
-        return flg;
-    }
-
 }
