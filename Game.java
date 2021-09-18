@@ -25,6 +25,7 @@ public class Game {
     private final int cY = 0;
 
     private static boolean keyflg = true;
+    private static int count = 0;
 
 
     public Game(){
@@ -39,6 +40,8 @@ public class Game {
         blocks = new ArrayList<>();
 
         screen = EnumScreen.START;
+
+        //int count = 0;
         
         while(flg){
             startTime = System.currentTimeMillis();
@@ -62,7 +65,7 @@ public class Game {
                 case GAME:
                     for(int y = 0;y < 20;y ++){
                         for(int x = 0;x < 10;x ++){
-                            if(Field.getField()[y][x] == 0) continue;
+                            if(Field.getField()[y][x] != 0) continue;
                             vG.setColor(Color.BLACK);
                             vG.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE,TILE_SIZE);
                         }
@@ -77,26 +80,24 @@ public class Game {
                         blockFlag = false;
                     }
 
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE) && keyflg){
-                        if( this.check(0, 0) ){
-                            System.out.println("hello");
-                        }else{
-                            System.out.println("no");
-                            if(blocks.get(blocks.size() - 1).getBlockAngle() == 3){
-                                blocks.get(blocks.size() - 1).setBlockAngle(-3);
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_SPACE)){
+                        count ++;
+                        if(count == 1){
+                            if( this.check(0, 0) ){
                             }else{
-                                blocks.get(blocks.size() - 1).setBlockAngle(1);
+                                if(blocks.get(blocks.size() - 1).getBlockAngle() == 3){
+                                    blocks.get(blocks.size() - 1).setBlockAngle(-3);
+                                }else{
+                                    blocks.get(blocks.size() - 1).setBlockAngle(1);
+                                }
                             }
-                            keyflg = false;
                         }
-                        
                     }
 
                     if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT) && keyflg){
                         if( this.check(-1, 0) ){
                             blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() - 1);
                         }
-                        keyflg = false;
                     }
 
                     for(int i = 0;i < blocks.size(); i++){
@@ -140,7 +141,7 @@ public class Game {
     }
 
     private boolean check(int x,int y){
-        Block b = blocks.get(blocks.size() - 1);
+        Block b = blocks.get(0);//blocks.size() - 1
         int blockAngle = b.getBlockAngle();
         if(b.getBlockAngle() == 3){
             b.setBlockAngle(-3);
@@ -176,6 +177,7 @@ public class Game {
 
     public static void setKeyFlg(){
         keyflg = true;
+        count = 0;
     }
 
 }
