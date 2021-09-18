@@ -17,6 +17,7 @@ public class Keyboard extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent e) {
         super.keyReleased(e);
+        Game.setKeyFlg();
         keys.remove((Integer)e.getKeyCode());
     }
 
