@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.KeyEvent;
 
-public class Game {
+public class Game extends Thread{
 
     private Window w;
     private Graphics vG;
@@ -113,20 +113,43 @@ public class Game {
                         //}
                     }
 
-                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT)){
-                        //if( this.check(-1, 0) ){
-                        //    blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() - 1);
-                        //}
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_LEFT) && count == 0){
+                        count ++;
+                        Block b = blocks.get(blocks.size() - 1);
+                        if( this.check(-1, 0, b.getBlocks()[b.getBlockType()][b.getBlockAngle()]) ){
+                            blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() - 1);
+                        }
                     }
 
-                    for(int i = 0;i < blocks.size(); i++){
-                        Block b = blocks.get(i);
-                        if(this.check(0, 1, b.getBlocks()[blocks.get(blocks.size() - 1).getBlockType()][blocks.get(blocks.size() - 1).getBlockAngle()]) && dropTime == 0){
-                            b.update();
-                            dropTime = 30;
-                        }else{}
-                        b.draw(vG,TILE_SIZE);
+                    if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT) && count == 0){
+                        count ++;
+                        Block b = blocks.get(blocks.size() - 1);
+                        if( this.check(1, 0, b.getBlocks()[b.getBlockType()][b.getBlockAngle()]) ){
+                            blocks.get(blocks.size() - 1).setX(blocks.get(blocks.size() - 1).getX() + 1);
+                        }
                     }
+
+                    Block b = blocks.get(blocks.size() - 1);
+                    if(this.check(0, 1, b.getBlocks()[blocks.get(blocks.size() - 1).getBlockType()][blocks.get(blocks.size() - 1).getBlockAngle()])){
+                        if(dropTime == 0){
+                            b.update();
+                        dropTime = 30;
+                        }
+                    }else{
+                        for(int y = 0;y < 4;y ++){
+                            for(int x = 0;x < 4;x ++){
+
+                                if(b.getBlocks()[b.getBlockType()][b.getBlockAngle()][y][x] == 0) continue;
+
+                                int nx = x + b.getX();
+                                int ny = y + b.getY();
+
+                                Field.setField(nx, ny);
+                                blockFlag = true;
+                            }
+                        }
+                    }
+                    b.draw(vG,TILE_SIZE);
 
                     vG.setColor(Color.WHITE);
                     for(int y = 0;y < 21;y ++){
@@ -175,6 +198,7 @@ public class Game {
     //    //    return false;
     //    //}
     //}
+
 
     private boolean check(int x,int y,int[][] b){
         //int[][][][] block = b.getBlocks();
