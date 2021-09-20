@@ -12,6 +12,9 @@ public class Keyboard extends KeyAdapter {
         if(!keys.contains(e.getKeyCode())){
             keys.add(e.getKeyCode());
         }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            System.exit(0);
+        }
     }
 
     @Override

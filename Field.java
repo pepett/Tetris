@@ -28,7 +28,7 @@ public class Field {
         return FIELD;
     }
 
-    public static void setField(int x,int y){
-        FIELD[y][x] = 1;
+    public static void setField(int x,int y,int n){
+        FIELD[y][x] = n;
     }
 }
