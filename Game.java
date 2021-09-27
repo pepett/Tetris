@@ -185,6 +185,8 @@ public class Game extends Thread{
 
                     break;
                 case GAMEORVER:
+                    vG.setColor(Color.BLUE);
+                    vG.drawString("GameOver", metrics.stringWidth("GameOver") / 2, 200);
                     break;
             }
 
